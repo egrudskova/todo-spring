@@ -68,14 +68,9 @@ public class TodoServiceImpl implements TodoService {
         if (id != todoDto.getId()) {
             throw new IllegalArgumentException("Ids don't match");
         }
-        Todo todo = repository.findById(id)
+        repository.findById(id)
                 .orElseThrow(() -> new TodoNotFoundException("Todo not found with id: " + id));
-
-        todo.setName(todoDto.getName());
-        todo.setDescription(todoDto.getDescription());
-        todo.setDue(todoDto.getDue());
-        TodoStatus todoStatus = TodoStatus.valueOf(todoDto.getStatus().toUpperCase());
-        todo.setStatus(todoStatus);
+        Todo todo = convertToEntity(todoDto);
         Todo updatedTodo = repository.save(todo);
 
         return convertToDto(updatedTodo);
